@@ -2,7 +2,7 @@ terraform {
   required_providers {
     random = {
       source  = "hashicorp/random"
-      version = ">= 2.2"
+      version = ">= 3.1.2"
     }
   }
 }
@@ -1087,9 +1087,9 @@ locals {
       regex       = "^[a-zA-Z0-9-._]+$"
     }
     key_vault = {
-      name        = substr(join("-", compact([local.prefix, "kv", local.suffix])), 0, 24)
-      name_unique = substr(join("-", compact([local.prefix, "kv", local.suffix_unique])), 0, 24)
-      dashes      = true
+      name        = substr(join("", compact([local.prefix_safe, "kv", local.suffix_safe])), 0, 24)
+      name_unique = substr(join("", compact([local.prefix_safe, "kv", local.suffix_unique_safe])), 0, 24)
+      dashes      = false
       slug        = "kv"
       min_length  = 3
       max_length  = 24
@@ -2919,6 +2919,10 @@ locals {
     public_ip_prefix = {
       valid_name        = length(regexall(local.az.public_ip_prefix.regex, local.az.public_ip_prefix.name)) > 0 && length(local.az.public_ip_prefix.name) > local.az.public_ip_prefix.min_length
       valid_name_unique = length(regexall(local.az.public_ip_prefix.regex, local.az.public_ip_prefix.name_unique)) > 0
+    }
+    recovery_services_vault = {
+      valid_name        = length(regexall(local.az.recovery_services_vault.regex, local.az.recovery_services_vault.name)) > 0 && length(local.az.recovery_services_vault.name) > local.az.recovery_services_vault.min_length
+      valid_name_unique = length(regexall(local.az.recovery_services_vault.regex, local.az.recovery_services_vault.name_unique)) > 0
     }
     redis_cache = {
       valid_name        = length(regexall(local.az.redis_cache.regex, local.az.redis_cache.name)) > 0 && length(local.az.redis_cache.name) > local.az.redis_cache.min_length
